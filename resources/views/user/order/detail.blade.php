@@ -40,7 +40,7 @@
         <input type="date" class="bg-white" name="day" placeholder="Hari, Tanggal">
     </div>
     <div class="flex flex-wrap my-3 space-x-2">
-        @for ($hour = 1; $hour <= 23; $hour++) <button><span class="badge-ball">{{ $hour }}:00</span></button>
+        @for ($hour = 10; $hour <= 23; $hour++) <button><span class="badge-ball">{{ $hour }}:00</span></button>
             @if ($hour % 11 == 0)
             <br>
             <br> <!-- Tambahkan baris baru setelah 11 elemen -->
