@@ -25,12 +25,12 @@
     <p>
         <i class="fas fa-list"></i> Jenis Lapangan : {{$field->field_type->name}}
     </p>
-    <p>
+    <!-- <p>
         <i class="fas fa-futbol"></i> Bola Tersedia :
         @foreach ($ball_types as $ball)
         <span class="badge-ball">{{$ball->name}}</span>
         @endforeach
-    </p>
+    </p> -->
 </div>
 <h1 class="text-md text-black font-semibold border-b-2 border-primary pb-3">Pilih Jadwal</h1>
 <form action="{{route('check-schedule',['field' => $field->id])}}" method="post">
@@ -40,7 +40,11 @@
         <input type="date" class="bg-white" name="day" placeholder="Hari, Tanggal">
     </div>
     <div class="flex flex-wrap my-3 space-x-2">
-        @for ($hour = 10; $hour <= 23; $hour++) <button><span class="badge-ball">{{ $hour }}:00</span></button>
+        @for ($hour = 10; $hour <= 23; $hour++) <a name="time">
+            <span class="badge-ball hour-option" style="background-color: rgba(46, 175, 125, var(--tw-bg-opacity));"> <input type="checkbox" name="time" value="{{ $hour }}:00" class="hour-checkbox">
+                {{ $hour }}:00
+            </span>
+            </a>
             @if ($hour % 11 == 0)
             <br>
             <br> <!-- Tambahkan baris baru setelah 11 elemen -->
@@ -48,17 +52,16 @@
             @endfor
     </div>
 
-    <!-- <div class="flex justify-between my-3 space-x-2">
-    <button><span class="badge-ball">11:00 PM</span></button>
+
+
+    <div class="flex justify-between my-3 space-x-2">
         <div class="w-1/2">
-            <label>Jam Mulai</label>
-            <input type="text" class="bg-white timepicker" name="start_at" placeholder="Jam Mulai" class="timepicker">
+            <input type="text" class="bg-white timepicker" name="start_at" placeholder="Jam Mulai" hidden>
         </div>
         <div class="w-1/2">
-            <label>Jam Selesai</label>
-            <input type="text" class="bg-white timepicker" name="end_at" placeholder="Jam Selesai" class="timepicker">
+            <input type="text" class="bg-white timepicker" name="end_at" placeholder="Jam Selesai" hidden>
         </div>
-    </div> -->
+    </div>
     <button type="submit" class="btn-primary">
         Cek Ketersediaan
     </button>
@@ -90,13 +93,137 @@
 </script>
 <script>
     $(document).ready(function() {
-        //    Timepicker
-        $('.timepicker').pickatime({
-            clear: 'Hapus',
-            format: 'HH:i',
-            interval: 60,
-            max: [21, 0],
-            min: [8, 0]
+        $('a[name="time"]').click(function() {
+            var span = $(this).find('span');
+            span.css('background-color', '#696969');
+        });
+
+        $('input[type="checkbox"]').change(function() {
+            var span = $(this).closest('a').find('span');
+
+            if ($(this).is(':checked')) {
+                span.css('background-color', '#696969');
+            } else {
+                span.css('background-color', 'rgba(46, 175, 125, var(--tw-bg-opacity))');
+            }
+        });
+
+        function updateSchedule(orders) {
+            const startAtValue = $("input[name='start_at']").val();
+            const endAtValue = $("input[name='end_at']").val();
+
+            for (let hour = 10; hour <= 23; hour++) {
+                const checkbox = $(`input[name="time"][value="${hour}:00"]`);
+                const span = checkbox.closest('a').find('span');
+
+                const order = orders.find(order => {
+                    const startAt = new Date(order.start_at).getHours();
+                    const endAt = new Date(order.end_at).getHours();
+                    return hour >= startAt && hour < endAt;
+                });
+
+                if (order) {
+                    span.css('background-color', '#696969');
+                    checkbox.prop('checked', true);
+                } else {
+                    span.css('background-color', 'rgba(46, 175, 125, var(--tw-bg-opacity))');
+                    checkbox.prop('checked', false);
+                }
+
+                // Periksa jika waktu saat ini cocok dengan nilai start_at atau end_at
+                if (hour == new Date(startAtValue).getHours() || hour == new Date(endAtValue).getHours()) {
+                    span.css('background-color', '#696969');
+                }
+            }
+        }
+    });
+</script>
+<script>
+    $(document).ready(function() {
+        $('.hour-option').hide();
+
+        $('input[name="day"]').change(function() {
+            const selectedDate = $(this).val();
+
+            if (selectedDate) {
+                $('.hour-option').show();
+            } else {
+                $('.hour-option').hide();
+            }
+        });
+
+    });
+</script>
+<script>
+    $(document).ready(function() {
+
+        $('#day').change(function() {
+
+            const selectedDate = $(this).val();
+
+
+            const lpid = window.location.href.split('/').pop();
+
+            $.ajax({
+                url: `{{ route("get-schedule") }}`, // Use the correct route name
+                type: 'GET',
+                data: {
+                    selected_date: selectedDate,
+                    lpid: lpid
+                },
+                success: function(data) {
+                    const orders = data.orders;
+                    updateSchedule(orders);
+                },
+                error: function(xhr, status, err) {
+                    console.error(err);
+                }
+            });
+        });
+
+        function updateSchedule(orders) {
+            for (let hour = 10; hour <= 23; hour++) {
+                const checkbox = $(`input[name="time"][value="${hour}:00"]`);
+                const span = checkbox.closest('a').find('span');
+
+                const order = orders.find(order => {
+                    const startAt = new Date(order.start_at).getHours();
+                    const endAt = new Date(order.end_at).getHours();
+                    return hour >= startAt && hour < endAt;
+                });
+
+                if (order) {
+                    span.css('background-color', '#696969');
+                    checkbox.prop('checked', true);
+                } else {
+                    span.css('background-color', 'rgba(46, 175, 125, var(--tw-bg-opacity))');
+                    checkbox.prop('checked', false);
+                }
+            }
+        }
+    });
+</script>
+<script>
+    $(document).ready(function() {
+        $('.hour-checkbox').change(function() {
+            var selectedHours = [];
+            $('.hour-checkbox:checked').each(function() {
+                selectedHours.push($(this).val());
+            });
+
+            // Jika ada dua jam yang dipilih, setel nilai 'Jam Mulai' dan 'Jam Selesai'
+            if (selectedHours.length === 2) {
+                var startAt = selectedHours[0];
+                var endAt = selectedHours[1];
+
+                // Setel nilai input 'Jam Mulai' dan 'Jam Selesai'
+                $('input[name="start_at"]').val(startAt);
+                $('input[name="end_at"]').val(endAt);
+            } else {
+                // Jika tidak ada atau hanya satu jam yang dipilih, kosongkan nilai 'Jam Mulai' dan 'Jam Selesai'
+                $('input[name="start_at"]').val('');
+                $('input[name="end_at"]').val('');
+            }
         });
         $('input[type=date]').pickadate({
             today: 'Hari ini',
@@ -107,9 +234,27 @@
             hiddenSuffix: '',
         });
 
+        $('#datePicker').change(function() {
+            // Dapatkan tanggal yang dipilih
+            const selectedDate = $(this).val();
+
+            // Sembunyikan semua elemen jam
+            $('.badge-ball').hide();
+
+            // Tampilkan elemen jam yang sesuai dengan tanggal yang dipilih
+            if (selectedDate) {
+                const selectedHour = new Date(selectedDate).getHours();
+                $(`.badge-ball[data-hour="${selectedHour}"]`).show();
+            }
+        });
+
         // on Submit
         $('form').submit(function(e) {
             e.preventDefault();
+            const selectedHours = [];
+            $('.hour-checkbox:checked').each(function() {
+                selectedHours.push($(this).val());
+            });
             $.ajax({
                 url: $(this).attr('action'),
                 type: $(this).attr('method'),
@@ -139,8 +284,6 @@
             $(this).addClass('border-2');
             $("#previewImg").attr('src', src);
         })
-
-
     })
 </script>
 @endsection

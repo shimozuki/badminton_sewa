@@ -41,6 +41,7 @@ Route::post('order/booking/{field}', [OrderController::class, 'booking'])
     ->middleware('auth')
     ->name('booking');
 Route::get('order/{field}', [OrderController::class, 'order']);
+Route::get('api/check-schedule/get-schedule', [OrderController::class, 'getSchedule'])->name('get-schedule');
 Route::post('api/check-schedule/{field:id}', [OrderController::class, 'checkSchedule'])->name('check-schedule');
 Route::get('app/profile', [ProfileController::class, 'index'])->name('app.profile');
 Route::get('app/profile/edit', [ProfileController::class, 'edit'])->name('app.profile.edit');

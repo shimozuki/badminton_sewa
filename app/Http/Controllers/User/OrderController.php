@@ -15,16 +15,30 @@ use Exception;
 use Helpers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
 {
     public function detail(FutsalField $field)
     {
         $ball_types = BallType::select("name")->where('is_available', '1')->get();
-        $images = FutsalImage::where(['futsal_field_id'=>$field->id]);
+        $images = FutsalImage::where(['futsal_field_id' => $field->id]);
         $imageExist = $images->exists();
         $images = $images->get();
-        return view('user.order.detail', compact('field', 'ball_types','images','imageExist'));
+        return view('user.order.detail', compact('field', 'ball_types', 'images', 'imageExist'));
+    }
+
+    public function getSchedule(Request $request)
+    {
+        $selectedDate = $request->input('selected_date');
+        $idFutsalField = $request->input('lpid');
+
+        $orders = DB::table('orders')
+            ->where('play_date', $selectedDate)
+            ->where('futsal_field_id', $idFutsalField)
+            ->get();
+
+        return response()->json(['orders' => $orders]);
     }
 
     public function order(FutsalField $field)

@@ -3,8 +3,7 @@
 @section('content')
 <div class="mt-2 pb-3 mb-2 border-b flex justify-between items-center">
     <h1 class="text-md text-dark font-semibold">Review Order</h1>
-    <a href="#" onclick="return window.history.go(-1)" class="py-2 text-xs font-medium text-gray-500"><i
-            class="fas fa-xs fa-arrow-left"></i> Kembali</a>
+    <a href="#" onclick="return window.history.go(-1)" class="py-2 text-xs font-medium text-gray-500"><i class="fas fa-xs fa-arrow-left"></i> Kembali</a>
 </div>
 <div id="description" class="my-3">
     <p>
@@ -38,6 +37,7 @@
             @foreach ($paymentTypes as $type)
             <option value="{{$type->id}}">{{$type->bank_name}}</option>
             @endforeach
+            <option value="10">Dana</option>
         </select>
     </div>
     <div class="w-full mb-3">
@@ -58,66 +58,94 @@
         Booking
     </button>
 </form>
+<div class="modal fade" id="danaModal" tabindex="-1" role="dialog" aria-labelledby="danaModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="danaModalLabel">Metode Pembayaran Dana</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+            <center><img src="{{ asset('images/qris.jpg') }}" alt="Logo Neofutsal" height="80%" width="80%"></center>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 @endsection
 @section('css')
 <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
 {{-- pickdate js --}}
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pickadate.js/3.6.4/themes/default.css"
-    integrity="sha512-x9ZSPqJJfUhtPuo+fw6331wHeC3vhDpNI3Iu4KC05zJrxx7MWYewaDaASGxAUgWyrwU50oFn6Xk0CrQnTSuoOA=="
-    crossorigin="anonymous" referrerpolicy="no-referrer" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pickadate.js/3.6.4/themes/default.date.css"
-    integrity="sha512-Ix4qjGzOeoBtc8sdu1i79G1Gxy6azm56P4z+KFl+po7kOtlKhYSJdquftaI4hj1USIahQuZq5xpg7WgRykDJPA=="
-    crossorigin="anonymous" referrerpolicy="no-referrer" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pickadate.js/3.6.4/themes/default.time.css"
-    integrity="sha512-OVCdZvsw/MeYx12cD+0Cmw/TA5Iw3bJXM4dpSIxXmDK3X5erHyETXkB3OGqnNQ72sL4UOuyTH9kdWds2MGYcBQ=="
-    crossorigin="anonymous" referrerpolicy="no-referrer" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pickadate.js/3.6.4/themes/default.css" integrity="sha512-x9ZSPqJJfUhtPuo+fw6331wHeC3vhDpNI3Iu4KC05zJrxx7MWYewaDaASGxAUgWyrwU50oFn6Xk0CrQnTSuoOA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pickadate.js/3.6.4/themes/default.date.css" integrity="sha512-Ix4qjGzOeoBtc8sdu1i79G1Gxy6azm56P4z+KFl+po7kOtlKhYSJdquftaI4hj1USIahQuZq5xpg7WgRykDJPA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pickadate.js/3.6.4/themes/default.time.css" integrity="sha512-OVCdZvsw/MeYx12cD+0Cmw/TA5Iw3bJXM4dpSIxXmDK3X5erHyETXkB3OGqnNQ72sL4UOuyTH9kdWds2MGYcBQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 @endsection
 @section('js')
 <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
 {{-- pickdate js --}}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pickadate.js/3.6.4/picker.js"
-    integrity="sha512-VQa5Pmc87GQrifaBaI+ejCQBHkca6yhwKH+iFihubE4Mf3NSj0jVN3cppGHPlFSa2MRmAD7xwuZ8fr9DOHUsgw=="
-    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pickadate.js/3.6.4/picker.date.js"
-    integrity="sha512-4UAypxd5+OVqRf2SeJTnkd+W47HoLnpHjwannVikXGsgJxH2Hl+SBDM9UYyi+3hpNc16aaGeOu5RvesbSwlRlA=="
-    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pickadate.js/3.6.4/picker.time.js"
-    integrity="sha512-j3HVwMQuwEYegEnNfKlQ/paV3/b7TB4/Ul9bYIjBKiwbIXGQ/mzs3H+wqfvNo/7mKtNXUZnQWHDj3xNrNNA/7w=="
-    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pickadate.js/3.6.4/picker.js" integrity="sha512-VQa5Pmc87GQrifaBaI+ejCQBHkca6yhwKH+iFihubE4Mf3NSj0jVN3cppGHPlFSa2MRmAD7xwuZ8fr9DOHUsgw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pickadate.js/3.6.4/picker.date.js" integrity="sha512-4UAypxd5+OVqRf2SeJTnkd+W47HoLnpHjwannVikXGsgJxH2Hl+SBDM9UYyi+3hpNc16aaGeOu5RvesbSwlRlA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pickadate.js/3.6.4/picker.time.js" integrity="sha512-j3HVwMQuwEYegEnNfKlQ/paV3/b7TB4/Ul9bYIjBKiwbIXGQ/mzs3H+wqfvNo/7mKtNXUZnQWHDj3xNrNNA/7w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 {{-- Languge ID --}}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pickadate.js/3.6.4/translations/id_ID.js"
-    integrity="sha512-H0M7Dt6trlnUdVMlngUxUWFoLxaPOn4g3GggDu+pvy72Lx43NyDr+Rwp6kt0/PNYnueVvHYLmvDGxx80YfQ1og=="
-    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pickadate.js/3.6.4/translations/id_ID.js" integrity="sha512-H0M7Dt6trlnUdVMlngUxUWFoLxaPOn4g3GggDu+pvy72Lx43NyDr+Rwp6kt0/PNYnueVvHYLmvDGxx80YfQ1og==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+    $(document).ready(function() {
+        // Tambahkan event listener untuk elemen <select>
+        $('select[name="payment_type_id"]').change(function() {
+            // Dapatkan nilai yang dipilih
+            const selectedValue = $(this).val();
+
+            // Periksa jika nilai adalah "10" (Dana)
+            if (selectedValue === '10') {
+                // Tampilkan modal
+                $('#danaModal').modal('show');
+            } else {
+                // Sembunyikan modal jika ada
+                $('#danaModal').modal('hide');
+            }
+        });
+    });
+</script>
 <script>
     const swiper = new Swiper('.swiper-container', {
         // Optional parameters
         direction: 'horizontal',
         loop: true,
         autoplay: true,
-        delay : 2000,
-        });
+        delay: 2000,
+    });
 </script>
 <script>
-    $(document).ready(function(){
+    $(document).ready(function() {
         //    Timepicker
         $('.timepicker').pickatime({
-            clear : 'Hapus',
-            format : 'HH:i',
-            interval : 60,
-            max : [21,0],
-            min : [8,0]
+            clear: 'Hapus',
+            format: 'HH:i',
+            interval: 60,
+            max: [21, 0],
+            min: [8, 0]
         });
         $('input[type=date]').pickadate({
-            today : 'Hari ini',
-            clear : 'Hapus',
-            close : 'Batal',
-            min : 0,
+            today: 'Hari ini',
+            clear: 'Hapus',
+            close: 'Batal',
+            min: 0,
             formatSubmit: 'yyyy-mm-dd',
-            hiddenSuffix : '',
+            hiddenSuffix: '',
         });
         //custom radio
-        $('.payment-radio').click(function(){
+        $('.payment-radio').click(function() {
             let id = $(this).attr('data-id');
             let icon = $(this).find('.icon');
             let check = `<i class="fas fa-xs fa-check-circle">`;
@@ -130,49 +158,50 @@
             checkPaymentType(id);
         })
         //select on change
-        $('select').change(function(){
-            $('button[type=submit]').attr('disabled',false);
+        $('select').change(function() {
+            $('button[type=submit]').attr('disabled', false);
             $('button[type=submit]').removeClass('btn-gray').addClass('btn-primary');
         })
         // on Submit
-        $('form').submit(function(e){
+        $('form').submit(function(e) {
             e.preventDefault();
             $.ajax({
-                url : $(this).attr('action'),
-                type : $(this).attr('method'),
-                data : $(this).serialize(),
-                dataType : 'json',
-                success : function(data){
-                    if(data?.success){
-                        return toastr('success',data?.message, `<a href='/transaction/${data?.data?.transactionId}'> Bayar</a>`);
+                url: $(this).attr('action'),
+                type: $(this).attr('method'),
+                data: $(this).serialize(),
+                dataType: 'json',
+                success: function(data) {
+                    if (data?.success) {
+                        return toastr('success', data?.message, `<a href='/transaction/${data?.data?.transactionId}'> Bayar</a>`);
                     }
-                    if(data?.error){
+                    if (data?.error) {
                         return toastr('error', data?.message, `Tutup`);
                     }
                     return toastr('error', data?.message, `Tutup`);
                 },
-                error : function(xhr, status,err){
-                    if(xhr?.status == 401){
-                        return toastr('error',`Masuk atau Buat Akun terlebih dahulu!`,`<a href='{{route('login')}}'>Masuk</a>`);
+                error: function(xhr, status, err) {
+                    if (xhr?.status == 401) {
+                        return toastr('error', `Masuk atau Buat Akun terlebih dahulu!`, `<a href='{{route('login')}}'>Masuk</a>`);
                     }
-                    toastr('error',err);
+                    toastr('error', err);
                 }
             })
         })
     })
-    function checkPaymentType(type){
+
+    function checkPaymentType(type) {
         let activeClass = `text-success text-2xl`;
         let separator = `border-t border-gray-400`;
         let dp = $('#dp');
-        let dpParent =  dp.parent();
+        let dpParent = dp.parent();
         let total = $('#total');
-        let totalParent =  total.parent();
-        if(type == 1){ //DP
+        let totalParent = total.parent();
+        if (type == 1) { //DP
             dpParent.removeClass('hidden');
             dpParent.addClass(separator);
             totalParent.removeClass(separator);
             total.removeClass(activeClass);
-        }else{
+        } else {
             dpParent.removeClass(separator);
             totalParent.addClass(separator);
             total.addClass(`${activeClass}`);
