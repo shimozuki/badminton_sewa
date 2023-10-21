@@ -47,7 +47,7 @@
                         <div class="notification-content border-b pb-3">
                             <a href="">
                                 <p class="font-medium text-gray-600 py-2">
-                                    Welcome to Neofutsal!
+                                    Welcome to Play badminton!
                                 </p>
                                 <p class="text-sm text-gray-500 py-2">
                                     Thank you for register on our website

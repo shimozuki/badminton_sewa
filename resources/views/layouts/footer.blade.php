@@ -5,7 +5,7 @@
             <script>
                 document.getElementById('copyright').appendChild(document.createTextNode(new Date().getFullYear()))
             </script>
-            <a href="{{url('')}}">Neofutsal</a>
+            <a href="{{url('')}}">Play Badminton</a>
         </div>
     </div>
 </footer>

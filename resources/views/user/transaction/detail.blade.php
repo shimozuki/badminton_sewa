@@ -10,7 +10,8 @@
 <div class="card-transaction">
     <div class="card-header">
         <h2 class="text-dark text-2xl font-medium">
-            {{ $transaction->order->futsal_field->name }}
+            Badminton Arena
+            <!-- {{ $transaction->order->futsal_field->name }} -->
         </h2>
     </div>
     <div>

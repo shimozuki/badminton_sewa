@@ -77,7 +77,7 @@
                     </ul>
                 </div>
             </li>
-            <li class="@if ($activePage == 'setting') active @endif">
+            <!-- <li class="@if ($activePage == 'setting') active @endif">
                 <a href="#">
                     <i class="fas fa-calendar-alt"></i>
                     <p>{{ __('Jadwal Badminton') }}</p>
@@ -88,7 +88,7 @@
                     <i class="fas fa-cogs"></i>
                     <p>{{ __('Pengaturan') }}</p>
                 </a>
-            </li>
+            </li> -->
         </ul>
     </div>
 </div>
