@@ -29,7 +29,7 @@
             Informasi Transaksi
         </h2>
         <div class="pl-2">
-            
+
             <div class="flex justify-between items-center">
                 <p class="text-gray-600 text-sm font-medium">
                     Jenis Pembayaran
@@ -44,13 +44,13 @@
                 </p>
                 <span>
                     @if ($transaction->is_valid == 1)
-                        <p class="py-1 px-3 text-white text-xs font-medium bg-green-500 rounded-md">
-                          Lunas
-                        </p>
+                    <p class="py-1 px-3 text-white text-xs font-medium bg-green-500 rounded-md">
+                        Lunas
+                    </p>
                     @else
-                        <p class="py-1 px-3 text-white text-xs font-medium {{ $transaction->order->status_transaction->color }} rounded-md">
-                            {{ $transaction->order->status_transaction->name_user }}
-                        </p>
+                    <p class="py-1 px-3 text-white text-xs font-medium {{ $transaction->order->status_transaction->color }} rounded-md">
+                        {{ $transaction->order->status_transaction->name_user }}
+                    </p>
                     @endif
                 </span>
             </div>
@@ -59,7 +59,7 @@
                     Subtotal
                 </p>
                 <p class="my-1 text-gray-500 text-sm font-medium">
-                    {{ $transaction->order->hours }} jam x Rp. {{ number_format($transaction->order->price) }}
+                    {{ $transaction->order->hours }} jam x Rp. {{ number_format($transaction->order->price/$transaction->order->hours) }}
                 </p>
             </div>
             <div class="flex justify-between items-center">
@@ -67,7 +67,7 @@
                     Total
                 </p>
                 <p class="text-gray-500 text-sm font-medium">
-                    Rp. {{ number_format($transaction->order->hours * $transaction->order->price) }}
+                    Rp. {{ number_format($transaction->amount+$transaction->code) }}
                 </p>
             </div>
             <div class="flex justify-between items-center">
@@ -83,7 +83,7 @@
                     Metode Pembayaran
                 </p>
                 <p class="text-gray-500 text-sm font-medium">
-                   {{$transaction->payment_type->bank_name}} ({{ $transaction->payment_type->bank_code }})
+                    {{$transaction->payment_type->bank_name}} ({{ $transaction->payment_type->bank_code }})
                 </p>
             </div>
             <div class="flex justify-between items-start flex-col space-y-2">
@@ -91,37 +91,36 @@
                     Nomor Rekening
                 </p>
                 <p class="text-gray-500 text-sm font-medium">
-                   {{$transaction->payment_type->bank_account}}
+                    {{$transaction->payment_type->bank_account}}
                 </p>
             </div>
-           @if ($transaction->status_transaction_id > 2)
+            @if ($transaction->status_transaction_id > 2)
             <div class="flex justify-between items-start flex-col space-y-2">
                 <p class="text-gray-600 text-sm font-medium">
                     Instruksi Pembayaran
                 </p>
                 <div class="text-gray-500 text-sm font-medium leading-8">
-                {!! $transaction->payment_type->instruction !!}
+                    {!! $transaction->payment_type->instruction !!}
                 </div>
             </div>
-           @endif
+            @endif
 
-            @if ($transaction->order->status_transaction_id < 3)
-            <form class="flex flex-col items-center align-middle" action="{{ route('app.transaction.pay',['transaction'=>$transaction->id]) }}" method="post" enctype="multipart/form-data">
+            @if ($transaction->order->status_transaction_id < 3) <form class="flex flex-col items-center align-middle" action="{{ route('app.transaction.pay',['transaction'=>$transaction->id]) }}" method="post" enctype="multipart/form-data">
                 @csrf
                 <input type="file" name="proof_file" class="hidden">
                 <div class="upload border border-indigo-500 rounded cursor-pointer w-full">
                     <p class="px-3 py-4 text-sm text-indigo-500 text-center">
-                        <i class="fas fa-file-alt text-xl mr-3"></i> 
+                        <i class="fas fa-file-alt text-xl mr-3"></i>
                         <span id="uploadText">Upload Bukti Pembayaran</span>
                         <span class="text-xs block text-gray-400">png/jpg</span>
                     </p>
                 </div>
                 <img src="{{ asset("images/logo-neofutsal.png") }}" onerror="previewError()" class="object-cover w-56 border rounded upload cursor-pointer hidden" alt="Foto Bukti Pembayaran" id="preview">
                 <button type="submit" class="btn-primary block">
-                    Verifikasi Pembayaran   
+                    Verifikasi Pembayaran
                 </button>
-            </form>
-            @endif
+                </form>
+                @endif
 
         </div>
     </div>
@@ -129,30 +128,31 @@
 @endsection
 @section('js')
 <script>
-    $(document).ready(function(){
-        
+    $(document).ready(function() {
+
         const uploadHtml = $('#upload p').html();
-        $('.upload').click(function(){
+        $('.upload').click(function() {
             $('input[name=proof_file]').click();
         })
-        $('input[name=proof_file]').change(function(){
+        $('input[name=proof_file]').change(function() {
             $('div.upload').addClass('hidden');
             let images = ``;
             const files = document.querySelector('input[name="proof_file"]').files;
-            if(files[0]){
+            if (files[0]) {
                 const src = URL.createObjectURL(files[0]);
-                $('#preview').attr('src',src);
+                $('#preview').attr('src', src);
                 $('#preview').removeClass("hidden");
-            }else{
+            } else {
                 $('.upload').addClass('hidden');
                 $('div.upload').removeClass('hidden');
             }
         })
-        
+
 
     })
-    function previewError(){
-        toastr("error","Tidak dapat menampilkan preview! Periksa format gambar");
+
+    function previewError() {
+        toastr("error", "Tidak dapat menampilkan preview! Periksa format gambar");
         $('.upload').addClass('hidden');
         $('div.upload').removeClass('hidden');
     }

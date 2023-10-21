@@ -18,16 +18,17 @@
     <input type="hidden" name="schedule" value="{{request()->schedule}}">
     <div class="w-full mb-3">
         <label>Pilih Jenis Pembayaran</label>
-        <input type="hidden" name="transaction_type_id" value="1" id="transaction_type">
+        <input type="hidden" name="transaction_type_id" value="2" id="transaction_type">
         <!-- <div class="flex justify-between space-x-2">
-            <div class="active payment-radio" data-id="1">
-                <p class="text-xl icon"><i class="fas fa-xs fa-check-circle"></i></p>
-                <p class="font-medium">Down Payment 50%</p>
-            </div>
-            <div class="payment-radio" data-id="2">
+        <div class="payment-radio" data-id="1">
                 <p class="text-xl icon"><i class="far fa-xs fa-circle"></i></p>
                 <p class="font-medium">Bayar Full</p>
             </div>
+            <div class="payment-radio" data-id="2">
+                <p class="text-xl icon"><i class="fas fa-xs fa-check-circle"></i></p>
+                <p class="font-medium">Down Payment 50%</p>
+            </div>
+            
         </div> -->
     </div>
     <div class="w-full mb-3">
@@ -37,7 +38,6 @@
             @foreach ($paymentTypes as $type)
             <option value="{{$type->id}}">{{$type->bank_name}}</option>
             @endforeach
-            <option value="10">Dana</option>
         </select>
     </div>
     <div class="w-full mb-3">
@@ -112,18 +112,7 @@
     $(document).ready(function() {
 
         //custom radio
-        $('.payment-radio').click(function() {
-            let id = 2;
-            let icon = $(this).find('.icon');
-            let check = `<i class="fas fa-xs fa-check-circle">`;
-            let unCheck = `<i class="far fa-xs fa-circle">`;
-            $('.payment-radio').removeClass('active');
-            $('.payment-radio').find('.icon').html(unCheck);
-            $(this).addClass('active');
-            icon.html(check);
-            $('#transaction_type').val(id);
-            checkPaymentType(id);
-        })
+        checkPaymentType(2);
         //select on change
         $('select').change(function() {
             $('button[type=submit]').attr('disabled', false);
